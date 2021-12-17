@@ -1,0 +1,7 @@
+#!/bin/bash
+
+case "$1" in
+"w") while read file; do set_wallpaper "$file" & done ;;
+"d") rm $file;; 
+esac
+

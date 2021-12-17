@@ -1,0 +1,79 @@
+lyrics_directory = ~/.config/ncmpcpp/lyrics
+ncmpcpp_directory = ~/.config/ncmpcpp
+connected_message_on_startup = no
+[mpd]
+mpd_host = "localhost"
+mpd_port = "6600"
+mpd_music_dir = "~/Music"
+mpd_connection_timeout = "5"
+
+[visualizer]
+visualizer_data_source = "/tmp/mpd.fifo"
+visualizer_output_name = "my_fifo"
+visualizer_in_stereo = "yes"
+visualizer_type = "spectrum"
+# visualizer_look = ●▮
+visualizer_look = "◆┃"
+visualizer_spectrum_smooth_look = yes
+visualizer_color = magenta, red, green, white
+
+[Header]
+header_visibility              = "no"
+# titles_visibility              = "no"
+# header_window_color            = "default"
+# volume_color                   = "blue"
+state_line_color               = "black"
+state_flags_color              = "black"
+window_border_color            = "black"
+active_window_border           = "cyan"
+alternative_ui_separator_color = "black"
+
+[playlist]
+playlist_display_mode   = "classic"
+# song_list_format        = "$5%t $R$6%a"
+song_list_format        = "%t $R {%l}"
+now_playing_prefix      = "$b"
+now_playing_suffix      = "$/b"
+
+[statusbar]
+# progressbar_look = "━━━"
+# progressbar_look = "━━"
+progressbar_look = "━━─"
+progressbar_color = "black"
+progressbar_elapsed_color= "blue"
+statusbar_visibility = "yes"
+statusbar_color = "magenta"
+song_status_format = "{%t - %a}"
+
+# appearance
+browser_display_mode = "columns" #(classic/columns)
+autocenter_mode = "yes"
+user_interface = "classic" #(classic/alternative)
+cyclic_scrolling = "no"
+display_volume_level = "yes"
+display_remaining_time = "no"
+# startup_screen = playlist
+
+# colors
+colors_enabled = "yes"
+main_window_color = "blue"
+
+# more stuff
+playlist_disable_highlight_delay = "3"
+message_delay_time = "4"
+default_find_mode = "wrapped" #(wrapped/normal)
+follow_now_playing_lyrics = "yes"
+store_lyrics_in_song_dir = "yes"
+jump_to_now_playing_song_at_start = "yes"
+ignore_leading_the = "yes"
+mouse_support = "yes"
+lines_scrolled = 1
+mouse_list_scroll_whole_page = "no"
+empty_tag_marker = "-"
+empty_tag_color = default
+
+[notification]
+execute_on_song_change = notify-send --icon=~/.config/ncmpcpp/music.png "$(mpc current)"
+
+
+# vim: ft=cfg

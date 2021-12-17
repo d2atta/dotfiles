@@ -1,0 +1,10 @@
+# vim:ft=sh
+
+set_wallpaper -r &
+~/.config/dwm/./bar.sh & 
+xrandr -s 1920x1080
+xset r rate 300 50 &
+xcompmgr &
+dunst &
+unclutter &
+exec dwm > /dev/null 2>&1
