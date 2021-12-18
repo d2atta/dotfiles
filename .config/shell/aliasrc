@@ -56,3 +56,6 @@ alias hst="history | cut -c 8- | sort | uniq | dmenu | tr '\\n' ' ' | xclip -sel
 
 # Cleanup orphaned packages
 alias cleanup='sudo pacman -Rns (pacman -Qtdq)'
+
+# startx
+alias startx='startx "$XDG_CONFIG_HOME/x11/xinitrc"' 
