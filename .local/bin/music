@@ -1,0 +1,39 @@
+#!/bin/env dash
+
+if [ -z "$1" ];then
+  pkill -f "$( cat ~/.cache/music-url )" && notify-send "Radio" "Radio Stopped"
+  exit
+fi
+
+# Variables
+LOFI=0
+CLASIC=0
+url=""
+
+usage(){
+  echo "Usage: $0 [-c] [-l] [-u url]
+        -c   classical
+        -l   lofi
+        -u   play a url
+        -h   help message 
+        To stop playing just run $0 without any arguments" 
+}
+
+while getopts lcu: flag 
+do
+  case "${flag}" in
+    l) url="https://youtu.be/5qap5aO4i9A"
+       LOFI=1
+       ;;
+    c) url="https://live.musopen.org:8085/streamvbr0"
+       CLASIC=1
+       ;;
+    u) url="$OPTARG" ;;
+    *) usage;exit;;
+  esac
+done
+
+echo "$url" > ~/.cache/music-url # Saving the url
+mpv --no-video "$url" >/dev/null 2>&1 &
+[ $LOFI -eq 1 ] && notify-send -i ~/.local/share/radio.jpeg "Radio" "Lofi-Radio Started"
+[ $CLASIC -eq 1 ] && notify-send -i ~/.local/share/radio.jpeg "Radio" "Classical-Radio Started"

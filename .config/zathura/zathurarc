@@ -2,7 +2,7 @@
 
 
 set selection-clipboard clipboard
-set smooth-scroll "true"
+# set smooth-scroll "true"
 set guioptions none
 set highlight-active-color "#C3AFF7"
 set font "JetBrainsMono Nerd Font Mono Bold 9"

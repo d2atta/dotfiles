@@ -1,0 +1,18 @@
+#!/bin/dash
+# Cleans a folder by moving files in respective
+# XDG-USER directories.
+# Dependencies: xdg-user-dirs
+# XDG-USER folders
+MUSIC=$( xdg-user-dir MUSIC )
+VIDEOS=$( xdg-user-dir VIDEOS )
+PICTURES=$( xdg-user-dir PICTURES )
+DOCUMENTS=$( xdg-user-dir DOCUMENTS )
+
+# goto folder
+cd "$1" || exit 0
+
+# Move to respective folders
+mv *.jpeg *.png *.jpg *.gif "$PICTURES"/
+mv *.mp3 *.ogg *.wav "$MUSIC"/
+mv *.mp4 *.mkv *.flv "$VIDEOS"/
+mv *.doc *.pdf *.md "$DOCUMENTS"/

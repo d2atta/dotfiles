@@ -1,59 +1,158 @@
-#!/bin/bash
+#!/bin/sh
 
 # ^c$var^ = fg color
 # ^b$var^ = bg color
 
-interval=0
+# INIT
+echo "$$" > ~/.cache/pidofbar
+sec=0
 
 # load colors!
-. ~/.config/dwm/themes/onedark
+update_col(){
+  black=$(xrdb -get color0)
+  green=$(xrdb -get color5)
+  white=$(xrdb -get color7)
+  grey=$(xrdb -get color8)
+  blue=$(xrdb -get color1)
+  red=$(xrdb -get color2)
+  darkblue=$(xrdb -get color3)
+}
+update_col
 
-cpu() {
-	cpu_val=$(grep -o "^[^ ]*" /proc/loadavg)
-
-	printf "^c$black^ ^b$green^  "
-	printf "^c$white^ ^b$grey^ $cpu_val"
+update_cpu() {
+  cpu_val=$(grep -o "^[^ ]*" /proc/loadavg)
+  cpu="^c$black^ ^b$green^  ""^c$white^ ^b$grey^ $cpu_val"
 }
 
 pkg_updates() {
-	# updates=$(doas xbps-install -un | wc -l) # void
-	updates=$(checkupdates | wc -l)   # arch , needs pacman contrib
-	# updates=$(aptitude search '~U' | wc -l)  # apt (ubuntu,debian etc)
+  updates=$(pacman -Qu | wc -l)   # arch , needs pacman contrib
+  # updates=$(aptitude search '~U' | wc -l)  # apt (ubuntu,debian etc)
 
-	printf "^c$green^  $updates"
+  pkgs="^c$green^  $updates"
 }
 
-battery() {
-	get_capacity="$(cat /sys/class/power_supply/BAT0/capacity)"
-	printf "^c$blue^   $get_capacity"
+update_bat() {
+  get_capacity="$(cat /sys/class/power_supply/BAT0/capacity)"
+  case "$(cat /sys/class/power_supply/BAT0/status)" in
+    "Full") status="" ;;
+    "Discharging") status="" ;;
+    "Charging") status=" " ;;
+    "Not charging") status="" ;;
+    "Unknown") status="" ;;
+  esac
+  battery="^c$blue^ $status $get_capacity%"
 }
 
-brightness() {
-	printf "^c$red^   "
-	printf "^c$red^%.0f\n" $(cat /sys/class/backlight/*/brightness)
+update_brightness() {
+  # you might need to change the path depending on your device
+  # act_brightness="$(cat /sys/class/backlight/*/actual_brightness)"  
+  brightness="^c$red^   ""^c$red^%.0f\n""$(cat /sys/class/backlight/*/brightness)"
 }
 
-mem() {
-	printf "^c$blue^^b$black^  "
-	printf "^c$blue^ $(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)"
+update_vol(){
+  vol="$(pamixer --get-volume)"
+
+  if [ "$(pamixer --get-volume-human)" = "muted" ] ; then
+    icon="婢 "
+  elif [ "$vol" -gt "70" ]; then
+    icon=" "
+  elif [ "$vol" -lt "30" ]; then
+    icon=" "
+  else
+    icon="墳 "
+  fi
+  volume="^c$red^ $icon""^c$red^ $vol%"
+}
+
+update_ram() {
+  ram="^c$black^ ^b$green^  ""^c$white^ ^b$grey^ $(free -h | awk '/^Mem/ { print $3 }' | sed s/i//g)B"
+}
+
+update_mem() {
+  free_space=$(df -h | awk '/sda2/ { print $5 }')
+  mem="^c$blue^^b$black^  ""^c$blue^ $free_space"
+}
+traf_update() {
+    sum=0
+    for arg; do
+        read -r i < "$arg"
+        sum=$(( sum + i ))
+    done
+    cache=${XDG_CACHE_HOME:-$HOME/.cache}/${1##*/}
+    [ -f "$cache" ] && read -r old < "$cache" || old=0
+    printf %d\\n "$sum" > "$cache"
+    printf %d\\n $(( sum - old ))
+}
+
+update_speed(){
+  # rx=$(traf_update /sys/class/net/[ew]*/statistics/rx_bytes)
+  tx=$(traf_update /sys/class/net/[ew]*/statistics/tx_bytes)
+  traf="^c$red^  ""^c$red^$(numfmt --to=iec "$tx")B"
 }
 
 wlan() {
-	case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
+	case "$(cat /sys/class/net/e*/operstate 2>/dev/null)" in
 	up) printf "^c$black^ ^b$blue^ 爵 ^d^%s" " ^c$blue^Connected" ;;
 	down) printf "^c$black^ ^b$blue^ 爵 ^d^%s" " ^c$blue^Disconnected" ;;
 	esac
 }
 
-clock() {
-	printf "^c$black^ ^b$darkblue^  "
-	printf "^c$black^^b$blue^ $(date '+%I:%M %p') "
+update_clock() {
+  clock=$(date '+%I')
+
+  case "$clock" in
+      "00") icon="" ;;
+      "01") icon="" ;;
+      "02") icon="" ;;
+      "03") icon="" ;;
+      "04") icon="" ;;
+      "05") icon="" ;;
+      "06") icon="" ;;
+      "07") icon="" ;;
+      "08") icon="" ;;
+      "09") icon="" ;;
+      "10") icon="" ;;
+      "11") icon="" ;;
+      "12") icon="" ;;
+  esac
+  # shellcheck disable=2059
+  clock="^c$black^ ^b$darkblue^ $icon ""^c$black^^b$blue^ $(date '+%I:%M %p') "
 }
 
-while true; do
+# modules that don't update on their own need to be run at the start for getting their initial value
+pkg_updates
+update_vol
 
-	[ $interval = 0 ] || [ $(($interval % 3600)) = 0 ] && updates=$(pkg_updates)
-	interval=$((interval + 1))
+display () { 
+  # printf "%s\n" "$pkgs $battery $volume $mem $traf $ram $clock"
+  xsetroot -name "$pkgs $battery $volume $mem $traf $ram $clock"
+}
 
-	sleep 1 && xsetroot -name "$updates $(battery) $(cpu) $(mem) $(wlan) $(clock)"
-done
+# SIGNALLING
+# trap	"<function>;display"		"RTMIN+n"
+trap	"update_vol;display"		"RTMIN"
+trap	"pkg_updates;display" 		"RTMIN+1"
+trap	"update_col;pkg_updates;\
+         update_bat;update_vol;\
+         update_mem;update_speed;\
+         update_ram;update_clock"       "USR1"
+# to update it from external commands
+## kill -m "$(cat ~/.cache/pidofbar)"
+# where m = 34 + n
+
+while true
+do
+	sleep 1 & wait && { 
+		# to update item ever n seconds with a offset of m
+		## [ $((sec % n)) -eq m ] && udpate_item
+		[ $((sec % 30  )) -eq 0 ] && update_bat         # update battery every 30 seconds
+		[ $((sec % 300 )) -eq 0 ] && update_mem         # update memory every 5 minutes
+		[ $((sec % 5   )) -eq 0 ] && update_speed	# update speed every 5 seconds
+		[ $((sec % 5   )) -eq 0 ] && update_ram 	# update ram every 5 seconds
+		[ $((sec % 10  )) -eq 0 ] && update_clock 	# update time every 10 seconds
+
+		# how often the display updates ( 5 seconds )
+		[ $((sec % 5 )) -eq 0 ] && display
+		sec=$((sec + 1))
+	}
+done 

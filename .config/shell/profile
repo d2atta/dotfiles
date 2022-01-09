@@ -1,10 +1,13 @@
-# vim:ft=sh
+#!/bin/sh
+
+export ENV=$HOME/.config/shell/dash
 export EDITOR="nvim"
 export TERMINAL="st"
-export BROWSER="firefox"
+export BROWSER="brave"
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_BINARY_HOME="$HOME/.local/bin"
 export XDG_CACHE_HOME="$HOME/.cache"
 
 export XAUTHORITY=/tmp/Xauthority
@@ -15,8 +18,12 @@ export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export PASSWORD_STORE_DIR="$XDG_DATA_HOME/password-store"
 export KODI_DATA="$XDG_DATA_HOME/kodi"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export PYTHONHISTORY="$XDG_CACHE_HOME/python_history"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export LESSHISTFILE="$XDG_CACHE_HOME/lesshst"
-
+export WGETRC="$XDG_CONFIG_HOME/wgetrc"
+export PYDORO_CONFIG_FILE="$XDG_CONFIG_HOME/pydoro/pydoro.ini"
+export DIANA_SECRET_TOKEN="HTSnxdNZ5fJ3qQ+4cHE9y0zFJtpw34PMt0+QyBm/Sz0="
 
 # if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
 #   exec startx

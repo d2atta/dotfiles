@@ -13,6 +13,7 @@ fish_vi_key_bindings
 # Hide welcome message
 set fish_greeting
 set VIRTUAL_ENV_DISABLE_PROMPT "1"
+set fish_cursor_insert line
 
 ## Environment setup
 source ~/.config/shell/profile

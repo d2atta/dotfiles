@@ -1,22 +1,51 @@
-#!/bin/bash
-
+#!/bin/dash
+# Set a png/jpg/gif/mp4 as a wallpaper
 # Dependencies:
-# convert wal xdotool xwallpaper 
+# convert wal xdotool xwallpaper gifbg(Personal Script)
 
-wall_dir=~/Pictures
+# constants
+wall_dir=$( xdg-user-dir PICTURES )
 
+# parse arguments
 if [ -z "$1" ]; then
   wall="$(find "$wall_dir" -type f -name "*.jpg" -o -name "*.png" | shuf -n1)"
-elif [ "$1" = "-t" ]; then
+  echo "Random"
+elif [ "$1" = "-r" ]; then
   xwallpaper --zoom ~/.local/share/bg.jpg
-  exit
+  exit 0
+elif [ "$1" = "-k" ]; then
+  gifbg -k
+  exit 0
 else
   wall="$1"
 fi
 
-convert "$wall" ~/.local/share/bg.jpg
+# Main 
+case "${wall##*.}" in
+  png|jpg|jpeg)
+    gifbg -k
+    convert "$wall" ~/.local/share/bg.jpg
+    ;;
+  gif|mp4)
+    gifbg -s "$wall"
+    convert "${wall}[0]" ~/.local/share/bg.jpg
+    ;;
+esac
+
 xwallpaper --zoom ~/.local/share/bg.jpg
+notify-send --icon="$wall" "🖼️ Wallpaper and Pallate Updated"
+
+# Post change updates
 wal -c
-wal -i ~/.local/share/bg.jpg
-xdotool key super+R
-notify-send --icon=$wall "Wallpaper and Pallate Updated"
+wal --backend colorz --vte -teni ~/.local/share/bg.jpg
+xrdb -load ~/.config/x11/xresources
+# update dwm-bar
+kill -USR1 $(cat ~/.cache/pidofbar)
+# update dwm
+xdotool key "super+shift+r"
+# update startpage feature pic
+convert ~/.local/share/bg.jpg -thumbnail '1000x1000>' \
+  -background '#5E81AC' \
+  -gravity center \
+  -extent 1000x1000 ~/.config/startpage/startpage.jpg
+exit 0

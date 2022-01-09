@@ -10,14 +10,13 @@
 #
 
 # Replace cat with bat
-alias cat='bat --style header --style rules --style snip --style changes --style header'
+# alias cat='bat --style header --style rules --style snip --style changes --style header'
 
 # Changing "ls" to "exa"
-alias ls='exa -a' # my preferred listing
-alias la='exa -al --color=always --group-directories-first --icons'  # all files and dirs
-alias ll='exa -l --color=always --group-directories-first --icons'  # long format
-alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
-alias l. "exa -a | egrep '^\.'"                                     # show only dotfiles
+alias l='exa -Fs "size" --icons --group-directories-first '
+alias ll='l --color-scale  -@ --no-user --no-time'
+alias la='l -al'  
+alias l.="exa -a | egrep '^\.'"
 
 # Directory Traversal
 alias ...='cd ../..'
@@ -29,33 +28,40 @@ alias .5='cd ../../../../..'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-alias v='nvim'
+alias v='$EDITOR'
 
 # confirm before overwriting something
 alias cp="cp -rv"
 alias mv='mv -v'
-alias rm='rm -rfv'
+alias rm='rm -vI'
+alias bc="bc -ql"
+alias mkd="mkdir -pv"
+alias ffmpeg="ffmpeg -hide_banner"
 
 # adding flags
 alias df='df -h'                          # human-readable sizes
 alias free='free -m'                      # show sizes in MB
+
 # Python alias
 alias py='python3'
 
 # youtube-dl alias
-alias ytbdl="youtube-dl -f bestvideo+bestaudio -o '%(title)s.%(ext)s' --external-downloader=aria2c"
-alias ytadl="youtube-dl -x -f bestaudio -o '%(title)s.%(ext)s' --external-downloader=aria2c"
+alias ytb="youtube-dl -f bestvideo+bestaudio -o '%(title)s.%(ext)s' --external-downloader=aria2c"
+alias yta="youtube-dl -x -f bestaudio -o '%(title)s.%(ext)s' --external-downloader=aria2c"
 alias ytdl="youtube-dl -f best -o '%(title)s.%(ext)s' --external-downloader=aria2c"
 alias ytpdl="youtube-dl -f best -o '%(playlist_index)s. %(title)s.%(ext)s' --external-downloader=aria2c" 
 
 # Dotfile management
-alias dots='/usr/bin/git --git-dir=$HOME/projects/dotfiles/ --work-tree=$HOME'
+alias dots='/usr/bin/git --git-dir=$HOME/proj/dotfiles/ --work-tree=$HOME'
 
 # History alais
 alias hst="history | cut -c 8- | sort | uniq | dmenu | tr '\\n' ' ' | xclip -sel c"
+alias wget="wget --hsts-file=/home/devildev/.cache/wget-hsts"
 
 # Cleanup orphaned packages
 alias cleanup='sudo pacman -Rns (pacman -Qtdq)'
 
+alias pomo="pomo --path /home/devildev/.config/pomo/config.json"
+
 # startx
-alias startx='startx "$XDG_CONFIG_HOME/x11/xinitrc"' 
+alias startx='startx "$XINITRC"' 
