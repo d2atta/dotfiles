@@ -23,7 +23,6 @@ export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export LESSHISTFILE="$XDG_CACHE_HOME/lesshst"
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
 export PYDORO_CONFIG_FILE="$XDG_CONFIG_HOME/pydoro/pydoro.ini"
-export DIANA_SECRET_TOKEN="HTSnxdNZ5fJ3qQ+4cHE9y0zFJtpw34PMt0+QyBm/Sz0="
 
 # if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
 #   exec startx
