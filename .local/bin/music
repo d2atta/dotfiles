@@ -35,5 +35,6 @@ done
 
 echo "$url" > ~/.cache/music-url # Saving the url
 mpv --no-video "$url" >/dev/null 2>&1 &
+
 [ $LOFI -eq 1 ] && notify-send -i ~/.local/share/radio.jpeg "Radio" "Lofi-Radio Started"
 [ $CLASIC -eq 1 ] && notify-send -i ~/.local/share/radio.jpeg "Radio" "Classical-Radio Started"

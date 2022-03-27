@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: coding question
+# key: cp
+# expand-env: ((yas-indent-line 'fixed))
+# contributer: Debarghya
+# --
+
+#+begin_src org :tangle $1.txt
+$0
+#+end_src
+
+*code*
+#+begin_src python :tangle ${1:prog}.py
+<<head>>
+t = int(input())
+for _ in range(t):
+#+end_src
+
+#+begin_src emacs-lisp
+(shell-command-to-string "cat $1.txt | python $1.py ")
+#+end_src

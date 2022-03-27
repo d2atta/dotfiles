@@ -1,22 +1,24 @@
 #--- Applications ---#
-super + alt + {b,f, m}
-  {brave, pcmanfm, st -n "Music" -g 70x10 -e ncmpcpp-ueberzug}
+super + alt + {b,f, m, o}
+  {brave, st -e lf, st -n "Music" -g 70x10 -e ncmpcpp-ueberzug, obsidian}
 
+super + alt + e
+  emacsclient -c
 #--- Dmenu-scripts ---#
 super+s;{l,c,k,e,s}
   $XDG_BINARY_HOME/dm-scripts/{dm-logout,dm-confedit,dm-kill,dm-emoji,dm-websearch}
 
 super+s;{p,b}
-  {passmenu -l 5 -z 300 -p "site", sxiv -t (xdg-user-dir PICTURES)}
+  {passmenu -l 5 -z 300 -p "site", sxiv -t $(xdg-user-dir PICTURES)}
 
 #--- Media Control ---#
 F6
   pamixer -t ; \
-    kill -34 (cat ~/.cache/pidofbar) 
+    kill -34 $(cat ~/.cache/pidofbar) 
 
 {F7,F8}
   pulsemixer --change-volume {-,+}5 ; \
-    kill -34 (cat ~/.cache/pidofbar) 
+    kill -34 $(cat ~/.cache/pidofbar) 
 
 # {F9,F10,F11}
 #   mpc {prev, toggle, next}

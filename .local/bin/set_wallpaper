@@ -33,19 +33,26 @@ case "${wall##*.}" in
 esac
 
 xwallpaper --zoom ~/.local/share/bg.jpg
-notify-send --icon="$wall" "🖼️ Wallpaper and Pallate Updated"
 
 # Post change updates
 wal -c
 wal --backend colorz --vte -teni ~/.local/share/bg.jpg
 xrdb -load ~/.config/x11/xresources
+
+#dunst update
+pkill dunst
+dunst &
+notify-send --icon="$wall" "🖼️ Wallpaper and Pallate Updated"
+
 # update dwm-bar
 kill -USR1 $(cat ~/.cache/pidofbar)
+
 # update dwm
 xdotool key "super+shift+r"
+
 # update startpage feature pic
 convert ~/.local/share/bg.jpg -thumbnail '1000x1000>' \
   -background '#5E81AC' \
   -gravity center \
-  -extent 1000x1000 ~/.config/startpage/startpage.jpg
+  -extent 1000x1000 ~/proj/startpage/startpage.jpg
 exit 0

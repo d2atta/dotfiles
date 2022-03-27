@@ -1,0 +1,195 @@
+# Basic vars
+set shellopts '-eu'
+set ifs "\n"
+set scrolloff 10
+set drawbox
+set icons
+# set period 1
+set ignorecase
+set info size
+set filesep "\n"
+set hidden
+set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+set cleaner '~/.config/lf/cleaner'
+set previewer '~/.config/lf/previewer'
+
+################
+#   Commands   #
+################
+cmd chown %{{
+	printf "New Owner? "
+	read ans
+	chown $ans $f
+	if [ $? -eq 0 ]; then
+	  printf "Owner of $f changed to $ans"
+	else
+	  printf "Change of Owner failed"
+	fi
+	lf -remote "send reload"
+}}
+
+cmd chmod %{{
+	printf "New Permission? "
+	read ans
+	chmod $ans $f
+	if [ $? -eq 0 ]; then
+	  printf "Permissions updated for $f"
+	else
+	  printf "Failed to update permissions"
+	fi
+	lf -remote "send reload"
+}}
+
+cmd extract %{{
+	printf "extract? ${f##*/} [y/N]"
+	read ans
+	[ $ans = "y" ] && archive-extractor $fx
+	lf -remote "send clear"
+}}
+
+cmd mkfile %{{
+	printf "New File name? "
+	read ans
+	touch $ans
+	if [ $? -eq 0 ]; then
+	  printf "$ans created successfully"
+	else
+	  printf "Failed to create $ans"
+	fi
+}}
+
+cmd mkdir %{{
+	printf "New Directory name? "
+	read ans
+	mkdir -p $ans
+	if [ $? -eq 0 ]; then
+	  printf "$ans created successfully"
+	else
+	  printf "Failed to create $ans"
+	fi
+}}
+
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    [ -n "$fs" ] || fs="$(ls)"
+    printf '%s\n' "$fs" > "$old"
+    printf '%s\n' "$fs" > "$new"
+    $EDITOR "$new"
+    [ "$(wc -l "$new")" -ne "$(wc -l "$old")" ] && exit
+    paste "$old" "$new" | while IFS=$(printf "\t") read -r src dst; do
+        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+            continue
+        fi
+        mv -- "$src" "$dst"
+    done
+    rm -- "$old" "$new"
+    lf -remote "send $id unselect"
+}}
+
+# Dynamically set number of columns
+${{
+    w=$(tput cols)
+    if [ $w -le 80 ]; then
+        lf -remote "send $id set ratios 1:2"
+    elif [ $w -le 160 ]; then
+        lf -remote "send $id set ratios 1:2:3"
+    else
+        lf -remote "send $id set ratios 1:2:3:5"
+    fi
+}}
+
+# Show progress for file copying
+cmd paste &{{
+    set -- $(cat ~/.local/share/lf/files)
+    mode="$1"
+    shift
+    case "$mode" in
+        copy)
+            rsync -av --ignore-existing --progress -- "$@" . |
+            stdbuf -i0 -o0 -e0 tr '\r' '\n' |
+            while IFS= read -r line; do
+                lf -remote "send $id echo $line"
+            done
+            ;;
+        move) mv -n -- "$@" .;;
+    esac
+    rm ~/.local/share/lf/files
+    lf -remote "send clear"
+}}
+
+cmd newfold %{{
+    printf "Directory name: "
+    read newd
+    mkdir -- "$newd"
+    mv -- $fx "$newd"
+}}
+
+cmd scrolldown &{{
+	# Retrieve the current preview offset.
+	offset="$(cat "$LF_UEBERZUG_TEMPDIR/offset")"
+	
+	# Increment the offset.
+	echo "$((offset+1))" >"$LF_UEBERZUG_TEMPDIR/offset"
+	
+	# Trigger a reload.
+	lf -remote "send $id reload"
+}}
+
+cmd scrollup &{{
+	offset="$(cat "$LF_UEBERZUG_TEMPDIR/offset")"
+	if [ "$offset" -gt 1 ]; then
+		echo "$((offset-1))" >"$LF_UEBERZUG_TEMPDIR/offset"
+	fi
+	lf -remote "send $id reload"
+}}
+################
+# Key bindings #
+################
+
+# Remove some defaults
+map m
+map o
+map n
+map "'"
+map '"'
+map d
+map c
+map e
+map f
+
+# File preview
+map <lt> scrollup
+map <gt> scrolldown
+
+# File Interaction
+map e $$EDITOR $fx
+map <enter> open
+map so $doas $EDITOR $fx
+
+map R bulk-rename # bulk reaname
+map C rename # rename file
+map r push C<a-b><a-b><a-f> # before extention
+map x cut
+map DD delete # delete file
+
+map a mkfile
+map A mkdir
+map cp chmod
+map co chown
+
+# execute
+map X !$f
+
+# Misc
+map <a-n> newfold
+map E extract # extract file
+map b &set_wallpaper $f # set background
+map Y $printf "$fx" | xclip -selection clipboard # yank name to clip
+map W $setsid -f $TERMINAL >/dev/null 2>&1
+map <esc> cmd-escape
+map d clear
+
+# Source Bookmarks 
+source "~/.config/lf/shortcutrc" 
+# vim:ft=config

@@ -1,0 +1,6 @@
+map gh cd ~
+map gr cd /
+map gdl cd ~/dl/
+map gmu cd ~/music/
+map gpr cd ~/proj/
+

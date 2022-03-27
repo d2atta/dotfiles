@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name:question url
+# key:qrl
+# --
+
+( [[https://www.codechef.com/problems/$1][$1]] )$0

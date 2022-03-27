@@ -9,14 +9,14 @@
 #  >=>>=>  >====>       >=>     >=> >==>  >=>>=>  >====>       >=>
 #
 
-# Replace cat with bat
-# alias cat='bat --style header --style rules --style snip --style changes --style header'
+# bat enhancement
+alias bat='bat --style header --style rules --style snip --style changes --style header'
 
 # Changing "ls" to "exa"
-alias l='exa -Fs "size" --icons --group-directories-first '
-alias ll='l --color-scale  -@ --no-user --no-time'
-alias la='l -al'  
-alias l.="exa -a | egrep '^\.'"
+alias ll='exa -GlF -s name --icons --no-user --no-time --group-directories-first --color-scale  -@'
+alias la='ll -as "size" '
+alias l.="ls -a | egrep '^\.'"
+alias ls="ls --color=auto"
 
 # Directory Traversal
 alias ...='cd ../..'
@@ -37,6 +37,8 @@ alias rm='rm -vI'
 alias bc="bc -ql"
 alias mkd="mkdir -pv"
 alias ffmpeg="ffmpeg -hide_banner"
+alias mpv="devour mpv"
+alias lf="lfub"
 
 # adding flags
 alias df='df -h'                          # human-readable sizes
@@ -44,6 +46,9 @@ alias free='free -m'                      # show sizes in MB
 
 # Python alias
 alias py='python3'
+
+# Xdg-open alias
+alias open='xdg-open'
 
 # youtube-dl alias
 alias ytb="youtube-dl -f bestvideo+bestaudio -o '%(title)s.%(ext)s' --external-downloader=aria2c"
@@ -54,14 +59,15 @@ alias ytpdl="youtube-dl -f best -o '%(playlist_index)s. %(title)s.%(ext)s' --ext
 # Dotfile management
 alias dots='/usr/bin/git --git-dir=$HOME/proj/dotfiles/ --work-tree=$HOME'
 
-# History alais
-alias hst="history | cut -c 8- | sort | uniq | dmenu | tr '\\n' ' ' | xclip -sel c"
+# useful alais
+alias hst="history | cut -c 8- | sort | uniq | fzf | tr '\\n' ' ' | xclip -sel c"
 alias wget="wget --hsts-file=/home/devildev/.cache/wget-hsts"
+alias se="du -a $XDG_BINARY_HOME | cut -f2 | fzf --multi | xargs -r $EDITOR"
+alias update="paru -Syu &&  kill -35 $(cat ~/.cache/pidofbar)"
 
 # Cleanup orphaned packages
-alias cleanup='sudo pacman -Rns (pacman -Qtdq)'
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq) 2>/dev/null'
+alias syncmob='rsync -rtvP -zz --delete ~/proj/notes/* mobile:~/SDCard/notes'
 
 alias pomo="pomo --path /home/devildev/.config/pomo/config.json"
-
-# startx
-alias startx='startx "$XINITRC"' 
+# vim:ft=sh

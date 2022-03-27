@@ -115,7 +115,6 @@ update_clock() {
       "11") icon="" ;;
       "12") icon="" ;;
   esac
-  # shellcheck disable=2059
   clock="^c$black^ ^b$darkblue^ $icon ""^c$black^^b$blue^ $(date '+%I:%M %p') "
 }
 

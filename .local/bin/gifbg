@@ -7,7 +7,7 @@ PIDFILE="/var/run/user/$UID/gif.pid"
 declare -a PIDs
 
 _usage(){
-  echo "Usage: $0 [-h] [-k] [-s file]
+  echo "Usage: $0 [-h] [-k] [-s file/url]
         -h   Display help
         -s   Start gif background
         -k   Kill the background"
