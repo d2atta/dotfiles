@@ -1,9 +1,11 @@
 #--- Applications ---#
-super + alt + {b,f, m, o}
-  {brave, st -e lf, st -n "Music" -g 70x10 -e ncmpcpp-ueberzug, obsidian}
+super + alt + {b,f, m, o, s}
+  {brave, st -e lf, st -n "Music" -g 70x10 -e ncmpcpp-ueberzug, obsidian, spotify -no-zygote}
 
 super + alt + e
   emacsclient -c
+super + alt + v
+  st -e nvim &
 #--- Dmenu-scripts ---#
 super+s;{l,c,k,e,s}
   $XDG_BINARY_HOME/dm-scripts/{dm-logout,dm-confedit,dm-kill,dm-emoji,dm-websearch}
@@ -12,19 +14,20 @@ super+s;{p,b}
   {passmenu -l 5 -z 300 -p "site", sxiv -t $(xdg-user-dir PICTURES)}
 
 #--- Media Control ---#
-F6
-  pamixer -t ; \
-    kill -34 $(cat ~/.cache/pidofbar) 
+super + F6
+  pamixer -t;\
+  kill -34 $(cat ~/.cache/pidofbar)
 
-{F7,F8}
-  pulsemixer --change-volume {-,+}5 ; \
-    kill -34 $(cat ~/.cache/pidofbar) 
+super + {F7,F8}
+  pamixer -{d,i} 5; \
+  kill -34 $(cat ~/.cache/pidofbar)
 
-# {F9,F10,F11}
-#   mpc {prev, toggle, next}
+super + {F9,F10,F11}
+   playerctl {previous, play-pause, next}; \
+   now-playing
 
-super + control + p
-  mpc toggle
+control + p
+  now-playing
 
 #---- Screenshot ----#
 super + control + u

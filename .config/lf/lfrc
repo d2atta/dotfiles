@@ -43,7 +43,7 @@ cmd chmod %{{
 cmd extract %{{
 	printf "extract? ${f##*/} [y/N]"
 	read ans
-	[ $ans = "y" ] && archive-extractor $fx
+	[ $ans = "y" ] && archive_extracter $fx
 	lf -remote "send clear"
 }}
 
@@ -173,8 +173,8 @@ map r push C<a-b><a-b><a-f> # before extention
 map x cut
 map DD delete # delete file
 
-map a mkfile
-map A mkdir
+map mf mkfile
+map md mkdir
 map cp chmod
 map co chown
 

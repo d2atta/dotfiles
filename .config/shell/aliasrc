@@ -1,3 +1,4 @@
+#!/bin/sh
 # ~/.config/shell/aliasrc
 #
 #    >=>                            >=>     >=>
@@ -70,4 +71,5 @@ alias cleanup='sudo pacman -Rns $(pacman -Qtdq) 2>/dev/null'
 alias syncmob='rsync -rtvP -zz --delete ~/proj/notes/* mobile:~/SDCard/notes'
 
 alias pomo="pomo --path /home/devildev/.config/pomo/config.json"
+[ ! -x /usr/bin/yay ] && [ -x /usr/bin/paru ] && alias yay='paru'
 # vim:ft=sh

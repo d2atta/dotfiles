@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/sh
 # Set a png/jpg/gif/mp4 as a wallpaper
 # Dependencies:
 # convert wal xdotool xwallpaper gifbg(Personal Script)
@@ -39,13 +39,10 @@ wal -c
 wal --backend colorz --vte -teni ~/.local/share/bg.jpg
 xrdb -load ~/.config/x11/xresources
 
-#dunst update
-pkill dunst
-dunst &
 notify-send --icon="$wall" "🖼️ Wallpaper and Pallate Updated"
 
 # update dwm-bar
-kill -USR1 $(cat ~/.cache/pidofbar)
+kill -USR1 "$(cat ~/.cache/pidofbar)"
 
 # update dwm
 xdotool key "super+shift+r"

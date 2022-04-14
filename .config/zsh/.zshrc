@@ -1,20 +1,7 @@
-# Sorcing files
-source "$HOME/.config/shell/aliasrc"
-
-# vi-mode
-bindkey -v
-function zle-keymap-select () {
-  case $KEYMAP in
-    vicmd) echo -ne '\e[1 q';;      # block
-    viins|main) echo -ne '\e[5 q';; # beam
-  esac
-}
-zle -N zle-keymap-select
-export KEYTIMEOUT=1
-
-autoload -U colors && colors	# Load colors
-setopt autocd		# Automatically cd into typed directory.
-stty stop undef		# Disable ctrl-s to freeze terminal.
+# Options
+autoload -U colors && colors   # Load colors
+setopt autocd           # Automatically cd into typed directory.
+stty stop undef         # Disable ctrl-s to freeze terminal.
 setopt interactive_comments
 setopt HIST_IGNORE_SPACE
 zle_highlight=('paste:none')
@@ -29,16 +16,12 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots) # Include hidden files.
 
-function zsh_add_file() {
-    [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
-}
-
-zsh_add_file "zsh-prompt"
-
-# AUR
-zsh_add_file "complist/key-bindings.zsh"
-[ ! -x /usr/bin/yay ] && [ -x /usr/bin/paru ] && alias yay='paru'
-[ -f "$HOME"/.config/lf/icons ] && source "$HOME"/.config/lf/icons
+# Sorcing files
+[ -f "$ZDOTDIR/zsh-prompt" ] && source "$ZDOTDIR/zsh-prompt"
+[ -f "$ZDOTDIR/complist/key-bindings.zsh" ] && source "$ZDOTDIR/complist/key-bindings.zsh"
+[ -f "${XDG_CONFIG_HOME}/shell/shortcutrc" ] && source "${XDG_CONFIG_HOME}/shell/shortcutrc"
+[ -f "${XDG_CONFIG_HOME}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME}/shell/aliasrc"
+[ -f "${XDG_CONFIG_HOME}/lf/icons" ] && source "${XDG_CONFIG_HOME}/lf/icons"
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line
@@ -49,6 +32,26 @@ bindkey '\e[C' forward-char # ➡️
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(forward-char)
 bindkey '\033[1;3C' forward-word # alt+ ➡️
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(forward-word)
+
+# vi mode
+bindkey -v
+export KEYTIMEOUT=1
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select () {
+    case $KEYMAP in
+        vicmd) echo -ne '\e[1 q';;      # block
+        viins|main) echo -ne '\e[5 q';; # beam
+    esac
+}
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+# echo -ne '\e[5 q' # Use beam shape cursor on startup.
+# preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 # lf-cd
 lfcd () {
@@ -61,9 +64,10 @@ lfcd () {
     fi
 }
 bindkey -s '^o' 'lfcd\n'
+bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 
+# PATH change
 export PATH="$PATH:$HOME/.local/lib/lua-language-server/bin"
-#pyenv
 export PATH="$PATH:$PYENV_ROOT/bin"
 eval "$(pyenv init --path)"
 

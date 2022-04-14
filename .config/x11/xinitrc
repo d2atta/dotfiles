@@ -11,14 +11,23 @@
 #  >=>>=>  >====>       >=>     >=> >==>  >=>>=>  >====>       >=>
 #
 
+# configurations (Caution)
+xrandr -s 1920x1080
+xrdb -load ~/.config/x11/xresources
 set_wallpaper -r &
 ~/.config/dwm/./bar.sh &
-xrandr -s 1920x1080
 xset r rate 300 50 &
-xrdb -load ~/.config/x11/xresources &
+
+# Applications
 xcompmgr &
 sxhkd &
+emacs --daemon &
+
 mpd &
+mpDris2 -c ~/.config/mpdris2/mpDris2.conf &
+# playerctld daemon
+
 dunst &
 unclutter &
-exec dwm > /dev/null 2>&1
+
+exec  dwm > /dev/null 2>&1

@@ -2,10 +2,10 @@
 
 
 set selection-clipboard clipboard
-# set smooth-scroll "true"
 set guioptions none
+set sandbox none
 set highlight-active-color "#C3AFF7"
-set font "JetBrainsMono Nerd Font Mono Bold 9"
+set font "Hack Nerd Font 9"
 
 #colorscheme
 
@@ -33,13 +33,14 @@ set completion-fg               "#D8DEE9"
 set notification-bg             "#D8DEE9"
 set notification-fg             "#20242d"
 
-set recolor-darkcolor 			"#D8DEE9" 
+set recolor-darkcolor 		"#D8DEE9" 
 set recolor-lightcolor          "#20242d"
+# Dark mode
 set recolor                     "true"
 
 # setting recolor-keep true will keep any color your pdf has.
 # if it is false, it'll just be black and white
-set recolor-keephue             "true"
+set recolor-keephue  "true"
 
 set adjust-open "width"
 

@@ -67,6 +67,6 @@ magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head 
 
 # Simple notification
 notify-send "🎥 Downloading file ☺️ "
-# diana add "$magnet"
+diana add "$magnet"
 echo "$magnet"
 
