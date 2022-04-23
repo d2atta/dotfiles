@@ -1,0 +1,144 @@
+:root {
+    --background: #3B4252;
+    --foreground: #5E81AC;
+    --cursor: #b7b7c1;
+    /* Colors */
+    --color0: #060C10;
+    --color1: #31486C;
+    --color2: #BF616A;
+    --color3: #EBCB8B;
+    --color4: #89b482;
+    --color5: #586B97;
+    --color6: #5E79C3;
+    --color7: #b7b7c1;
+}
+
+/* :root { */
+/*     --color-bg: #282828; */
+/*     --color-fg: #EADBB2; */
+/*     --color-link: #8F9191; */
+/*     --color-link-visited: #668F8B; */
+/*     --color-link-hover: #FA7921 ; */
+/* } */
+
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Fira Code";
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 460px 600px 1fr;
+  grid-template-areas:
+    ". left right .";
+  column-gap: 80px;
+  justify-items: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+.left-container {
+  grid-area: left;
+  aspect-ratio: 1/1;
+}
+
+.right-container {
+  grid-area: right;
+  height: 50%;
+  width: 100%;
+}
+
+.gif img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 40px;
+  margin-left: 40px;
+  height: 50%;
+  width: 100%;
+}
+
+.search-area{
+  display: flex;
+}
+
+.search, .search:hover, .search:focus, .search:active {
+  background: transparent;
+  border: 0;
+  border-style: none;
+  border-color: transparent;
+  outline: none;
+  outline-offset: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.category {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+}
+
+.bookmarks {
+  display: flex;
+  justify-content: center;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.title {
+  font-size: 20px;
+}
+
+li {
+  font-size: 16px;
+  list-style-type: none;
+  padding: 5px
+}
+
+a:link {
+  text-decoration: none;
+  color: var(--color2);
+}
+
+a:visited {
+  color: var(--color3);
+}
+
+a:hover {
+  color: var(--color4);
+}
+
+.blinking {
+  animation: opacity 1s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes opacity {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

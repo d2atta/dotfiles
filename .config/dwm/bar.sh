@@ -19,6 +19,20 @@ update_col(){
 }
 update_col
 
+update_music() {
+	metadata=$(playerctl metadata --format 'title=[{{ title }}]  status=[{{ status }}]')
+	title=$(echo "${metadata}" | awk -F'[][]' -v RS="" '/title/ {print $2}' | awk 'length > 15{$0=substr($0,0,16)"..."}1')
+	status=$(echo "${metadata}" | awk -F'[][]' -v RS=" " '/status/ {print $2}')
+
+	if [ "$status" = "Paused" ]; then
+		icon="󰏥"
+	else
+		icon="󰐊"
+	fi
+
+	music="^c$darkblue^$icon^c$grey^ ${title:="N/A"}"
+}
+
 update_cpu() {
   cpu_val=$(grep -o "^[^ ]*" /proc/loadavg)
   cpu="^c$black^ ^b$green^ 󰍛 ""^c$white^ ^b$grey^ $cpu_val"
@@ -28,7 +42,7 @@ pkg_updates() {
   updates=$(pacman -Qu | wc -l)   # arch , needs pacman contrib
   # updates=$(aptitude search '~U' | wc -l)  # apt (ubuntu,debian etc)
 
-  pkgs="^c$green^󰕒 $updates"
+  pkgs="^c$green^󰕒 ^c$grey^$updates"
 }
 
 update_bat() {
@@ -40,7 +54,7 @@ update_bat() {
     "Not charging") status="󰁹" ;;
     "Unknown") status="󰁺" ;;
   esac
-  battery="^c$blue^$status$get_capacity%"
+  battery="^c$blue^$status^c$grey^$get_capacity%"
 }
 
 update_brightness() {
@@ -55,13 +69,13 @@ update_vol(){
   if [ "$(pamixer --get-volume-human)" = "muted" ] ; then
     icon="󰸈 "
   elif [ "$vol" -gt "70" ]; then
-    icon="󰕾 "
+    icon="󰕾"
   elif [ "$vol" -lt "30" ]; then
-    icon="󰕿 "
+    icon="󰕿"
   else
-    icon="󰖀 "
+    icon="󰖀"
   fi
-  volume="^c$red^$icon""^c$red^$vol%"
+  volume="^c$red^$icon""^c$grey^$vol%"
 }
 
 update_ram() {
@@ -132,17 +146,19 @@ update_wlan
 update_vol
 
 display () { 
-  # printf "%s\n" "$pkgs $battery $volume $mem $wifi $traf $ram $clock"
-  xsetroot -name "$pkgs $battery $volume $ram $wifi $traf $clock $date"
+  xsetroot -name "$music $pkgs $battery $volume $ram $wifi $traf $clock"
+  # echo "$music $pkgs $battery $volume $ram $wifi $traf $clock $date"
 }
 
 # SIGNALLING
 # trap	"<function>;display"		"RTMIN+n"
 trap	"update_vol;display"		"RTMIN"
 trap	"pkg_updates;display" 		"RTMIN+1"
-trap	"update_col;pkg_updates;\
-         update_bat;update_vol;\
-         update_mem;update_wlan;\
+trap	"update_music;display" 		"RTMIN+2"
+trap	"update_music;update_col;\
+	pkg_updates;update_bat;\
+	 update_vol;update_mem;\
+	 update_wlan;\
 	 update_speed;update_ram;\
 	 update_date;update_clock"      "USR1"
 # to update it from external commands
@@ -154,6 +170,7 @@ do
 	sleep 1 & wait && { 
 		# to update item ever n seconds with a offset of m
 		## [ $((sec % n)) -eq m ] && udpate_item
+		[ $((sec % 5)) -eq 0 ] && update_music
 		[ $((sec % 30  )) -eq 0 ] && update_bat         # update battery every 30 seconds
 		# [ $((sec % 300 )) -eq 0 ] && update_mem         # update memory every 5 minutes
 		[ $((sec % 300 )) -eq 0 ] && update_wlan        # update connectivity every 5 minutes
