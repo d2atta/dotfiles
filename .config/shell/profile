@@ -27,6 +27,7 @@ export PYTHONHISTORY="$XDG_CACHE_HOME/python_history"
 export PYDORO_CONFIG_FILE="$XDG_CONFIG_HOME/pydoro/pydoro.ini"
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 export DIANA_SECRET_TOKEN="HTSnxdNZ5fJ3qQ+4cHE9y0zFJtpw34PMt0+QyBm/Sz0="
+export NCDC_DIR="$XDG_CONFIG_HOME/ncdc"
 export _Z_DATA="$XDG_DATA_HOME/z"
 
 # For other applications

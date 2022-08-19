@@ -51,5 +51,5 @@ xdotool key "super+shift+r"
 convert ~/.local/share/bg.jpg -thumbnail '1000x1000>' \
   -background '#5E81AC' \
   -gravity center \
-  -extent 1000x1000 ~/proj/startpage/startpage.jpg
+  -extent 1000x1000 ~/.config/startpage/startpage.jpg
 exit 0

@@ -6,13 +6,15 @@ super + alt + e
   emacsclient -c
 super + alt + v
   st -e nvim &
+
+super + t
+  alacritty
 #--- Dmenu-scripts ---#
 super+s;{l,c,k,e,s}
   $XDG_BINARY_HOME/dm-scripts/{dm-logout,dm-confedit,dm-kill,dm-emoji,dm-websearch}
 
 super+s;{p,b}
-  {passmenu -l 5 -z 300 -p "site", sxiv -t $(xdg-user-dir PICTURES)}
-
+  {passmenu -l 5 -z 300 -p "site", nsxiv -t $(xdg-user-dir PICTURES)}
 #--- Media Control ---#
 super + F6
   pamixer -t;\
@@ -25,9 +27,6 @@ super + {F7,F8}
 super + {F9,F10,F11}
    playerctl {previous, play-pause, next}; \
    now-playing
-
-control + p
-  now-playing
 
 #---- Screenshot ----#
 super + control + u

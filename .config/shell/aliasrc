@@ -38,7 +38,7 @@ alias rm='rm -vI'
 alias bc="bc -ql"
 alias mkd="mkdir -pv"
 alias ffmpeg="ffmpeg -hide_banner"
-alias mpv="devour mpv"
+# alias mpv="devour mpv"
 alias lf="lfub"
 
 # adding flags
@@ -64,7 +64,7 @@ alias dots='/usr/bin/git --git-dir=$HOME/proj/dotfiles/ --work-tree=$HOME'
 alias hst="history | cut -c 8- | sort | uniq | fzf | tr '\\n' ' ' | xclip -sel c"
 alias wget="wget --hsts-file=/home/devildev/.cache/wget-hsts"
 alias se="du -a $XDG_BINARY_HOME | cut -f2 | fzf --multi | xargs -r $EDITOR"
-alias update="paru -Syu &&  kill -35 $(cat ~/.cache/pidofbar)"
+alias update="paru -Syu;kill -35 $(cat ~/.cache/pidofbar)"
 
 # Cleanup orphaned packages
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq) 2>/dev/null'
@@ -72,4 +72,5 @@ alias syncmob='rsync -rtvP -zz --delete ~/proj/notes/* mobile:~/SDCard/notes'
 
 alias pomo="pomo --path /home/devildev/.config/pomo/config.json"
 [ ! -x /usr/bin/yay ] && [ -x /usr/bin/paru ] && alias yay='paru'
+[ ! -x /usr/bin/sxiv ] && [ -x /usr/bin/nsxiv ] && alias sxiv='nsxiv'
 # vim:ft=sh

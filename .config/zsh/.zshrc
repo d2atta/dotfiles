@@ -18,8 +18,8 @@ _comp_options+=(globdots) # Include hidden files.
 
 # Sorcing files
 [ -f "$ZDOTDIR/zsh-prompt" ] && source "$ZDOTDIR/zsh-prompt"
-[ -f "$ZDOTDIR/complist/key-bindings.zsh" ] && source "$ZDOTDIR/complist/key-bindings.zsh"
-[ -f "${XDG_CONFIG_HOME}/shell/shortcutrc" ] && source "${XDG_CONFIG_HOME}/shell/shortcutrc"
+# [ -f "$ZDOTDIR/complist/key-bindings.zsh" ] && source "$ZDOTDIR/complist/key-bindings.zsh"
+# [ -f "${XDG_CONFIG_HOME}/shell/shortcutrc" ] && source "${XDG_CONFIG_HOME}/shell/shortcutrc"
 [ -f "${XDG_CONFIG_HOME}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME}/shell/aliasrc"
 [ -f "${XDG_CONFIG_HOME}/lf/icons" ] && source "${XDG_CONFIG_HOME}/lf/icons"
 
@@ -67,9 +67,8 @@ bindkey -s '^o' 'lfcd\n'
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
 
 # PATH change
-export PATH="$PATH:$HOME/.local/lib/lua-language-server/bin"
-export PATH="$PATH:$PYENV_ROOT/bin"
-eval "$(pyenv init --path)"
+# export PATH="$PATH:$PYENV_ROOT/bin"
+# eval "$(pyenv init --path)"
 
 # Load plugins
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null

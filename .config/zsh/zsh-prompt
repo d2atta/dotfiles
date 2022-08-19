@@ -28,7 +28,7 @@ zstyle ':vcs_info:git:*' formats " %{$fg[blue]%}(%{$fg[red]%}%m%u%c%{$fg[yellow]
 # prompt
 declare -a PROMPTS
 PROMPTS=(
-    "∮" "∯" "≎" "γ" "∇" "Π" "Φ" "ψ" "λ" "∞"
+     "Φ" "ψ" "λ" "∞" "∮" "≎" "γ" "∇" "Π"
 )
 RANDOM=$$$(date +%s)
 ignition=${PROMPTS[$RANDOM % ${#RANDOM[*]}+1]}

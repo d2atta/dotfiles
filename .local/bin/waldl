@@ -7,8 +7,8 @@ version="0.0.1"
 # Usage:
 # 	waldl <query>
 # if query left empty then sh_menu will be used (dmenu by default)
-# after the thumbnails are cached, sxiv would open up with the thumbnails
-# Select the wallpapers using `m` on the image. ( marking the image in sxiv )
+# after the thumbnails are cached, nsxiv would open up with the thumbnails
+# Select the wallpapers using `m` on the image. ( marking the image in nsxiv )
 # press `q` to quit sxiv, the marked images would start downloading
 
 ####################
@@ -19,8 +19,8 @@ version="0.0.1"
 walldir="$(xdg-user-dir PICTURES)"
 # the dir used to cache thumbnails
 cachedir="$HOME/.cache/wallhaven"
-# sxiv options
-sxiv_otps=" -tfpo -z 200" # o is needed for selection
+# nsxiv options
+nsxiv_otps=" -tfpo -z 200" # o is needed for selection
 # number of pages to show in search results
 # each page contains 24 results
 max_pages=6
@@ -65,13 +65,13 @@ sh_info () {
 # dependency checking
 dep_ck () {
 	for pr; do
-		if ! command -v $pr >/dev/null 2>&1; then
+		if ! command -v "$pr" >/dev/null 2>&1; then
 			sh_info "command $pr not found, install: $pr"
 			exit 1
 		fi
 	done
 }
-dep_ck "sxiv" "curl" "jq"
+dep_ck "nsxiv" "curl" "jq"
 
 
 # clean up command that would be called when the program exits
@@ -116,7 +116,7 @@ get_results "$query"
 
 # check if data file is empty, if so then exit
 {
-	read t < "$datafile"
+	read -r t < "$datafile"
 	[ -z "$t" ] && { sh_info "no images found"; exit 1; }
 }
 
@@ -142,11 +142,11 @@ done | curl -Z -K -
 #sh_info "downloaded thumbnails..."
 
 ###########################
-## user selection (sxiv) ##
+## user selection (nsxiv) ##
 ###########################
 
 # extract the id's out of the thumbnail name
-image_ids=$(sxiv $sxiv_otps "$cachedir" | rev | cut -c5-10 | rev )
+image_ids=$(nsxiv "$nsxiv_otps" "$cachedir" | rev | cut -c5-10 | rev )
 
 [ -z "$image_ids" ] && exit
 
@@ -155,7 +155,7 @@ image_ids=$(sxiv $sxiv_otps "$cachedir" | rev | cut -c5-10 | rev )
 #########################
 
 # download the selected wall papers
-cd "$walldir"
+cd "$walldir" || exit
 sh_info "downloading wallpapers..."
 for ids in $image_ids
 do
@@ -165,4 +165,4 @@ do
 done | curl -K -
 
 sh_info "wallpapers downloaded in:- '$walldir'"
-cd $walldir && sxiv $(ls -c) &
+cd "$walldir" && nsxiv "$(ls -c)" &
