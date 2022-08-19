@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Dependencies:
+# xwinwrap xrandr [mpv(mp4)|sxiv(gif)]
+
+PIDFILE="/var/run/user/$UID/gif.pid"
+declare -a PIDs
+
+_usage(){
+  echo "Usage: $0 [-h] [-k] [-s file/url]
+        -h   Display help
+        -s   Start gif background
+        -k   Kill the background"
+}
+# $1 -- geometry
+# $2 -- wallpaper
+  # --vo=x11 --hwdec=auto \    # for cpu
+  # --vo=vdpau --hwdec=vdpau \ # for GPU
+_screen() {
+    xwinwrap -ov -ni -g "$1" -- mpv --fullscreen\
+        --no-stop-screensaver \
+        --vo=x11 --hwdec=auto \
+        --loop-file --no-audio --no-osc --no-osd-bar -wid WID --no-input-default-bindings \
+        "$2" &
+
+    # xwinwrap -ov -ni -g "$1" -- sxiv -g "$1" -e WID -bfs f -a "$2" &
+    PIDs+=($!)
+}
+
+_kill() {
+  while read -r p; do
+    [[ $(ps -p "$p" -o comm=) == "xwinwrap" ]] && kill -9 "$p";
+  done < $PIDFILE
+}
+
+_play() {
+  for i in $( xrandr -q | grep ' connected' | grep -oP '\d+x\d+\+\d+\+\d+')
+  do
+      _screen "$i" "$1"
+  done
+
+  printf "%s\n" "${PIDs[@]}" > $PIDFILE
+}
+
+while getopts hks: flag 
+do
+  case "${flag}" in
+    k) _kill 
+       ;;
+    s) _kill 
+       sleep 0.5
+       _play "$OPTARG"
+       ;;
+    h|*) 
+      _usage
+       ;;
+  esac
+done
+
+exit 0
